@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="panda">
+
+  <!-- Entry point. Assembles the four fragments:
+         properties.xacro    tunable numbers
+         panda.xacro         links and joints
+         ros2_control.xacro  hardware interface
+         gazebo.xacro        simulation plugins -->
+
+  <!-- Name prefix for multi-robot setups. -->
+  <xacro:arg name="prefix" default=""/>
+
+  <!-- Mount the Franka hand on the flange. -->
+  <xacro:arg name="hand" default="true"/>
+
+  <!-- Emit the coarse self-collision companion links. -->
+  <xacro:arg name="with_sc" default="true"/>
+
+  <!-- Start GZ or Ignition depending on ROS 2 version -->
+  <xacro:arg name="is_ignition" default="true"/>
+
+  <!-- Load simulated or real hardware interfaces -->
+  <xacro:arg name="is_sim" default="true"/>
+
+  <!-- Hand-mounted camera and the Gazebo sensors system. -->
+  <xacro:arg name="sensors" default="false"/>
+
+  <!-- Anchor the robot to the world. -->
+  <xacro:arg name="use_world" default="true"/>
+
+  <!-- Pose of the robot in the world. -->
+  <xacro:arg name="world_xyz" default="0 0 0"/>
+  <xacro:arg name="world_rpy" default="0 0 0"/>
+
+  <!-- Optional YAML file with the initial joint positions (used by MoveIt). -->
+  <xacro:arg name="initial_positions_file" default=""/>
+
+  <!-- ========================================================================= -->
+
+  <xacro:include filename="$(find franka_description)/urdf/properties.xacro"/>
+  <xacro:include filename="$(find franka_description)/urdf/panda.xacro"/>
+  <xacro:include filename="$(find franka_description)/urdf/ros2_control.xacro"/>
+  <xacro:include filename="$(find franka_description)/urdf/gazebo.xacro"/>
+
+  <!-- Override the built-in home pose when a YAML file is supplied. -->
+  <xacro:property name="initial_positions_yaml"
+                  value="$(arg initial_positions_file)"/>
+  <xacro:if value="${initial_positions_yaml != ''}">
+    <xacro:property name="initial_positions"
+                    value="${xacro.load_yaml(initial_positions_yaml)['initial_positions']}"/>
+  </xacro:if>
+
+
+  <xacro:panda_arm prefix="$(arg prefix)" with_sc="$(arg with_sc)"/>
+
+  <xacro:if value="$(arg hand)">
+    <xacro:panda_hand prefix="$(arg prefix)" with_sc="$(arg with_sc)"/>
+  </xacro:if>
+
+  <xacro:panda_ros2_control prefix="$(arg prefix)"
+                            is_sim="$(arg is_sim)"
+                            is_ignition="$(arg is_ignition)"
+                            hand="$(arg hand)"/>
+
+  <xacro:panda_gazebo prefix="$(arg prefix)"
+                      is_sim="$(arg is_sim)"
+                      is_ignition="$(arg is_ignition)"
+                      sensors="$(arg sensors)"/>
+
+  <xacro:if value="$(arg use_world)">
+    <link name="world"/>
+
+    <joint name="world_joint" type="fixed">
+      <parent link="world"/>
+      <child link="$(arg prefix)panda_link0"/>
+      <origin rpy="$(arg world_rpy)" xyz="$(arg world_xyz)"/>
+    </joint>
+  </xacro:if>
+
+</robot>

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- One arm joint: position command, full state feedback. -->
+  <xacro:macro name="panda_joint_control" params="prefix n">
+    <joint name="${prefix}panda_joint${n}">
+      <command_interface name="position"/>
+      <state_interface name="position">
+        <param name="initial_value">${initial_positions['panda_joint' + str(n)]}</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Hardware interface for the whole robot.
+       is_sim=false  -> the robot_description is all a real driver needs.
+       is_ignition   -> Ignition/Gazebo Sim on Humble, gz on Iron and newer. -->
+  <xacro:macro name="panda_ros2_control" params="prefix:='' is_sim:=true is_ignition:=true hand:=true">
+
+    <xacro:if value="${is_sim}">
+      <ros2_control name="${prefix}panda" type="system">
+        <hardware>
+          <xacro:if value="${is_ignition}">
+            <plugin>ign_ros2_control/IgnitionSystem</plugin>
+          </xacro:if>
+          <xacro:unless value="${is_ignition}">
+            <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+          </xacro:unless>
+        </hardware>
+
+        <xacro:panda_joint_control prefix="${prefix}" n="1"/>
+        <xacro:panda_joint_control prefix="${prefix}" n="2"/>
+        <xacro:panda_joint_control prefix="${prefix}" n="3"/>
+        <xacro:panda_joint_control prefix="${prefix}" n="4"/>
+        <xacro:panda_joint_control prefix="${prefix}" n="5"/>
+        <xacro:panda_joint_control prefix="${prefix}" n="6"/>
+        <xacro:panda_joint_control prefix="${prefix}" n="7"/>
+
+        <xacro:if value="${hand}">
+          <joint name="${prefix}panda_finger_joint1">
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+          </joint>
+
+          <joint name="${prefix}panda_finger_joint2">
+            <param name="mimic">${prefix}panda_finger_joint1</param>
+            <param name="multiplier">1</param>
+            <command_interface name="position"/>
+            <state_interface name="position"/>
+            <state_interface name="velocity"/>
+          </joint>
+        </xacro:if>
+      </ros2_control>
+    </xacro:if>
+
+  </xacro:macro>
+
+</robot>

@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="table">
+    <static>true</static>
+
+    <link name="link">
+      <!-- Table top: upper surface at z = 0.55 m, level with the conveyor belt -->
+      <collision name="top_collision">
+        <pose>0 0 0.52 0 0 0</pose>
+        <geometry><box><size>0.90 1.10 0.06</size></box></geometry>
+      </collision>
+      <visual name="top_visual">
+        <pose>0 0 0.52 0 0 0</pose>
+        <geometry><box><size>0.90 1.10 0.06</size></box></geometry>
+        <material>
+          <ambient>0.30 0.21 0.13 1</ambient>
+          <diffuse>0.52 0.37 0.23 1</diffuse>
+          <specular>0.10 0.10 0.10 1</specular>
+        </material>
+      </visual>
+
+      <!-- Four legs down to the floor -->
+      <collision name="leg_fl_collision">
+        <pose>0.40 0.48 0.245 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 0.49</size></box></geometry>
+      </collision>
+      <collision name="leg_fr_collision">
+        <pose>0.40 -0.48 0.245 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 0.49</size></box></geometry>
+      </collision>
+      <collision name="leg_bl_collision">
+        <pose>-0.40 0.48 0.245 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 0.49</size></box></geometry>
+      </collision>
+      <collision name="leg_br_collision">
+        <pose>-0.40 -0.48 0.245 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 0.49</size></box></geometry>
+      </collision>
+
+      <visual name="leg_fl_visual">
+        <pose>0.40 0.48 0.245 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 0.49</size></box></geometry>
+        <material>
+          <ambient>0.20 0.21 0.23 1</ambient>
+          <diffuse>0.32 0.34 0.37 1</diffuse>
+        </material>
+      </visual>
+      <visual name="leg_fr_visual">
+        <pose>0.40 -0.48 0.245 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 0.49</size></box></geometry>
+        <material>
+          <ambient>0.20 0.21 0.23 1</ambient>
+          <diffuse>0.32 0.34 0.37 1</diffuse>
+        </material>
+      </visual>
+      <visual name="leg_bl_visual">
+        <pose>-0.40 0.48 0.245 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 0.49</size></box></geometry>
+        <material>
+          <ambient>0.20 0.21 0.23 1</ambient>
+          <diffuse>0.32 0.34 0.37 1</diffuse>
+        </material>
+      </visual>
+      <visual name="leg_br_visual">
+        <pose>-0.40 -0.48 0.245 0 0 0</pose>
+        <geometry><box><size>0.06 0.06 0.49</size></box></geometry>
+        <material>
+          <ambient>0.20 0.21 0.23 1</ambient>
+          <diffuse>0.32 0.34 0.37 1</diffuse>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>
