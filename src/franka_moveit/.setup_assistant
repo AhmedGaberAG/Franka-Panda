@@ -1,0 +1,6 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: franka_description
+    relative_path: urdf/panda.urdf.xacro
+  srdf:
+    relative_path: config/panda.srdf

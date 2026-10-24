@@ -1,0 +1,13 @@
+# Default initial joint positions for the Panda arm.
+#
+# Loaded by panda.urdf.xacro through the `initial_positions_file` xacro arg,
+# so the Gazebo/ros2_control start state and MoveIt agree. Values mirror the
+# canonical "ready" group state in panda.srdf.
+initial_positions:
+  panda_joint1: 0.0
+  panda_joint2: -0.785
+  panda_joint3: 0.0
+  panda_joint4: -2.356
+  panda_joint5: 0.0
+  panda_joint6: 1.571
+  panda_joint7: 0.785
